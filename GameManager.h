@@ -1,9 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Field.h"
 
 class GameManager {
-public:
   sf::RenderWindow window;
+  void pollEvents();
+  void draw();
+
+  Field field;
+
+public:
 
   GameManager();
   GameManager(const GameManager&) = delete;
@@ -11,4 +17,5 @@ public:
 
   void update();
   
+  bool isOpen() const;
 };
