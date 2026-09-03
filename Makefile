@@ -4,7 +4,7 @@ CFLAGS=-std=c++17
 SFML=SFML
 INCLUDE=-I $(SFML)/include
 LIB=-L $(SFML)/bin
-LFLAGS= -lsfml-graphics-3 -lsfml-window-3 -lsfml-system-3
+LFLAGS= -lsfml-graphics-3 -lsfml-window-3 -lsfml-system-3 -mwindows
 
 SOURCES = entry.cpp GameManager.cpp Field.cpp Snake.cpp
 TARGETS = $(SOURCES:%.cpp=obj/%.o)
