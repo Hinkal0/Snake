@@ -1,5 +1,6 @@
 #include "Field.h"
 #include <random>
+#include <algorithm>
 
 sf::Texture Field::fieldTex("textures/field.png");
 sf::Texture Field::appleTex("textures/apple.png");
@@ -28,9 +29,11 @@ Field::Field(uint32_t width, uint32_t height) {
   updateScales(width, height);
 }
 
-void Field::spawnRandomApple() {
+void Field::spawnRandomApple(const std::deque<sf::Vector2i>& pos) {
   hasApple = true;
-  applePos = {rand()%12, rand()%12};
+  do {
+    applePos = {rand()%12, rand()%12};
+  } while (std::find(pos.begin(), pos.end(), applePos) != pos.end());
   apple.setPosition(corner + sf::Vector2f({applePos.x*cell, applePos.y*cell}));
 }
 

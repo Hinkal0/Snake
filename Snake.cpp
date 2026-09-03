@@ -15,6 +15,8 @@ Snake::Snake(Field& field) : field(field) {
 
   pos.push_front({5, 5});
 
+  field.spawnRandomApple(pos);
+
   updateScales(field.width, field.height);
 }
 
@@ -24,6 +26,14 @@ void Snake::changeDirection(Direction d) {
   if ((d == Direction::Up || d == Direction::Down) && 
       (dir == Direction::Up || dir == Direction::Down)) return;
   dir = d;
+}
+
+void Snake::restart() {
+  pos.clear();
+  pos.push_front({5, 5});
+  dir = Direction::Right;
+  collided = false;
+  field.spawnRandomApple(pos);
 }
 
 void Snake::update() {
@@ -54,7 +64,7 @@ void Snake::update() {
 
   pos.push_front(newHead);
   if (newHead == field.applePos) {
-    field.spawnRandomApple();
+    field.spawnRandomApple(pos);
   } else {
     pos.pop_back();
   }

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <deque>
 
 class Field {
   static sf::Texture fieldTex;
@@ -25,7 +26,7 @@ public:
 
   Field(uint32_t width, uint32_t height);
 
-  void spawnRandomApple();
+  void spawnRandomApple(const std::deque<sf::Vector2i>& pos);
   void removeApple();
   void draw(sf::RenderWindow& window) const;
 

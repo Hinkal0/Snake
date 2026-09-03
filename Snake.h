@@ -30,6 +30,7 @@ public:
   Snake(Field& field);
 
   void changeDirection(Direction d);
+  void restart();
 
   void update();
   void draw(sf::RenderWindow& window);

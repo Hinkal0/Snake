@@ -4,7 +4,6 @@
 GameManager::GameManager()
   : window (sf::VideoMode({600, 600}), "Snake", sf::Style::Titlebar | sf::Style::Close),
     field (600, 600) {
-  field.spawnRandomApple();
   clock.start();
 }
 
@@ -55,6 +54,9 @@ void GameManager::pollEvents() {
         break;
       case sf::Keyboard::Key::Down:
         snake.changeDirection(Direction::Down);
+        break;
+      case sf::Keyboard::Key::R:
+        snake.restart();
         break;
       default:
         break;
