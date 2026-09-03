@@ -13,10 +13,12 @@ class Field {
 
   sf::Sprite apple = sf::Sprite(appleTex);
   bool hasApple = false;
-  sf::Vector2u applePos = {0, 0};
-
+  sf::Vector2i applePos = {0, 0};
+  
   void updateScales(uint32_t width, uint32_t height);
   
+  friend class Snake;
+
 public:
 
   sf::Sprite field = sf::Sprite(fieldTex);
@@ -26,4 +28,6 @@ public:
   void spawnRandomApple();
   void removeApple();
   void draw(sf::RenderWindow& window) const;
+
+  sf::Vector2f getCellPosition(const sf::Vector2i& cellPos) const;
 };

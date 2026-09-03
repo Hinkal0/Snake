@@ -30,7 +30,7 @@ Field::Field(uint32_t width, uint32_t height) {
 
 void Field::spawnRandomApple() {
   hasApple = true;
-  applePos = {(uint32_t)rand()%12, (uint32_t)rand()%12};
+  applePos = {rand()%12, rand()%12};
   apple.setPosition(corner + sf::Vector2f({applePos.x*cell, applePos.y*cell}));
 }
 
@@ -41,4 +41,8 @@ void Field::removeApple() {
 void Field::draw(sf::RenderWindow& window) const {
   window.draw(field);
   if (hasApple) window.draw(apple);
+}
+
+sf::Vector2f Field::getCellPosition(const sf::Vector2i& cellPos) const {
+  return corner + sf::Vector2f({cellPos.x*cell, cellPos.y*cell});
 }
