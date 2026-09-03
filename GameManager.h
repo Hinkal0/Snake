@@ -10,7 +10,10 @@ class GameManager {
 
   sf::Clock clock;
   Field field;
-  Snake snake = Snake(field);
+  uint32_t score = 0;
+  Snake snake = Snake(field, score);
+  sf::Font arial;
+  sf::Text scoreboard;
 
 public:
 

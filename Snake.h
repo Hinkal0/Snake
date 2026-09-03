@@ -22,12 +22,13 @@ class Snake {
   void updateScales(uint32_t width, uint32_t height);
 
   Field& field;
+  uint32_t& score;
 
 public:
   bool collided = false;  
   Direction dir = Direction::Right;
 
-  Snake(Field& field);
+  Snake(Field& field, uint32_t& score);
 
   void changeDirection(Direction d);
   void restart();

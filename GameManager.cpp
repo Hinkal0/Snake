@@ -3,8 +3,10 @@
 
 GameManager::GameManager()
   : window (sf::VideoMode({600, 600}), "Snake", sf::Style::Titlebar | sf::Style::Close),
-    field (600, 600) {
+    field (600, 600), arial("fonts/ArialMT.ttf"), scoreboard(arial, "0", 64) {
   clock.start();
+  scoreboard.setOrigin({scoreboard.getLocalBounds().size.x/2, scoreboard.getLocalBounds().size.y/2});
+  scoreboard.setPosition({300, 40});
 }
 
 void GameManager::update() {
@@ -12,6 +14,8 @@ void GameManager::update() {
 
   if (clock.getElapsedTime().asMilliseconds() >= 500) {
     snake.update();
+    scoreboard.setString(std::to_string(score));
+    scoreboard.setOrigin({scoreboard.getLocalBounds().size.x/2, scoreboard.getLocalBounds().size.y/2});
     clock.restart();
   }
 
@@ -29,6 +33,7 @@ bool GameManager::isOpen() const {
 void GameManager::draw() {
   field.draw(window);
   snake.draw(window);
+  window.draw(scoreboard);
 }
 
 void GameManager::pollEvents() {

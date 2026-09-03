@@ -9,7 +9,7 @@ void Snake::updateScales(uint32_t width, uint32_t height) {
   body.setScale({0.75f*width/600, 0.75f*height/600});
 }
 
-Snake::Snake(Field& field) : field(field) {
+Snake::Snake(Field& field, uint32_t& score) : field(field), score(score) {
   head.setOrigin({25, 25});
   body.setOrigin({25, 25});
 
@@ -33,6 +33,7 @@ void Snake::restart() {
   pos.push_front({5, 5});
   dir = Direction::Right;
   collided = false;
+  score = 0;
   field.spawnRandomApple(pos);
 }
 
@@ -65,6 +66,7 @@ void Snake::update() {
   pos.push_front(newHead);
   if (newHead == field.applePos) {
     field.spawnRandomApple(pos);
+    ++score;
   } else {
     pos.pop_back();
   }
