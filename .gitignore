@@ -1,3 +1,5 @@
 .vscode
-bin/
+bin/fonts
+bin/textures
+bin/snake.exe
 obj
