@@ -9,9 +9,10 @@ LFLAGS= -lsfml-graphics-3 -lsfml-window-3 -lsfml-system-3 -mwindows
 SOURCES = entry.cpp GameManager.cpp Field.cpp Snake.cpp
 TARGETS = $(SOURCES:%.cpp=obj/%.o)
 
-SNAKE=bin/snake.exe
+SNAKE=bin/snake
 
 all: dirs $(SNAKE)
+	@cp -u SFML/bin/sfml-graphics-3.dll SFML/bin/sfml-window-3.dll SFML/bin/sfml-system-3.dll bin
 	@cp -u textures/* bin/textures
 	@cp -u fonts/* bin/fonts
 
@@ -31,4 +32,4 @@ run: all
 	./$(SNAKE)
 
 clean:
-	rm -rf bin/textures bin/fonts bin/snake.exe obj
+	rm -rf bin/snake.exe bin/textures bin/fonts obj
