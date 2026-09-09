@@ -1,5 +1,3 @@
 .vscode
-bin/fonts
-bin/textures
-bin/snake.exe
 obj
+build
