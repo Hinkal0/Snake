@@ -48,11 +48,7 @@ void GameManager::update() {
     }
   }
 
-  window.clear(sf::Color(43, 35, 17));
-
   draw();
-
-  window.display();
 }
 
 bool GameManager::isOpen() const {
@@ -60,6 +56,8 @@ bool GameManager::isOpen() const {
 }
 
 void GameManager::draw() {
+  window.clear(sf::Color(43, 35, 17));
+
   if (scene == 0) {
     title.draw(window);
     bestMenu.draw(window);
@@ -70,6 +68,8 @@ void GameManager::draw() {
     best.draw(window);
     help.draw(window);
   }
+
+  window.display();
 }
 
 void GameManager::pollEvents() {
