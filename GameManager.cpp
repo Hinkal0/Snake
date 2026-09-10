@@ -4,16 +4,19 @@
 
 sf::Font GameManager::arial("fonts/ArialMT.ttf");
 
+static const wchar_t* titleStr = L"Нажмите Enter чтобы начать";
+
 static const wchar_t* helpStr = 
 L"←↑→↓ - повороты\nR - начать заново\nEsc - пауза";
 
 GameManager::GameManager()
   : window (sf::VideoMode({800, 600}), "Snake"),
-    field (800, 600), 
+    title(arial, {800, 600}, {300, 200}, 48, titleStr),
+    bestMenu(arial, {800, 600}, {300, 400}, 36, ""),
+    field (800, 600),
     score(arial, {800, 600}, {300, 40}, 64, "0"),
     best(arial, {800, 600}, {595, 5}, 32, "", 2),
     help(arial, {800, 600}, {5, 5}, 24, helpStr, 1) {
-  clock.start();
   sf::Vector2u minSize(800, 600);
   window.setMinimumSize(minSize);
 
@@ -22,25 +25,27 @@ GameManager::GameManager()
     save.read((char*)&bestScore, sizeof(uint32_t));
   }
   best.update(std::wstring(L"Лучший счёт: ") + std::to_wstring(bestScore));
+  bestMenu.update(std::wstring(L"Лучший счёт: ") + std::to_wstring(bestScore));
 }
 
 void GameManager::update() {
   pollEvents();
 
-  if (paused) return;
+  if (scene == 1 && !paused) {
 
-  if (clock.getElapsedTime().asMilliseconds() >= 500) {
-    snake.update();
+    if (clock.getElapsedTime().asMilliseconds() >= 500) {
+      snake.update();
 
-    if (oldScore != curScore) {
-      score.update(std::to_string(curScore));
-      oldScore = curScore;
-      if (curScore > bestScore) {
-        bestScore = curScore;
-        best.update(std::wstring(L"Лучший счёт: ") + std::to_wstring(bestScore));
+      if (oldScore != curScore) {
+        score.update(std::to_string(curScore));
+        oldScore = curScore;
+        if (curScore > bestScore) {
+          bestScore = curScore;
+          best.update(std::wstring(L"Лучший счёт: ") + std::to_wstring(bestScore));
+        }
       }
+      clock.restart();
     }
-    clock.restart();
   }
 
   window.clear(sf::Color(43, 35, 17));
@@ -55,11 +60,16 @@ bool GameManager::isOpen() const {
 }
 
 void GameManager::draw() {
-  field.draw(window);
-  snake.draw(window);
-  score.draw(window);
-  best.draw(window);
-  help.draw(window);
+  if (scene == 0) {
+    title.draw(window);
+    bestMenu.draw(window);
+  } else {
+    field.draw(window);
+    snake.draw(window);
+    score.draw(window);
+    best.draw(window);
+    help.draw(window);
+  }
 }
 
 void GameManager::pollEvents() {
@@ -73,6 +83,9 @@ void GameManager::pollEvents() {
     if (const auto* resized = event->getIf<sf::Event::Resized>()) {
       sf::View view(sf::FloatRect({.0f, .0f}, {(float)resized->size.x, (float)resized->size.y}));
       window.setView(view);
+      title.updateScales(resized->size.x, resized->size.y);
+      bestMenu.updateScales(resized->size.x, resized->size.y);
+
       field.updateScales(resized->size.x, resized->size.y);
       snake.updateScales(resized->size.x, resized->size.y);
       score.updateScales(resized->size.x, resized->size.y);
@@ -80,6 +93,14 @@ void GameManager::pollEvents() {
       help.updateScales(resized->size.x, resized->size.y);
     }
     if (const auto* key = event->getIf<sf::Event::KeyPressed>()) {
+      if (scene == 0) {
+        if (key->code == sf::Keyboard::Key::Enter) {
+          scene = 1;
+          clock.restart();
+        }
+        continue;
+      }
+
       switch (key->code) {
       case sf::Keyboard::Key::Right:
         snake.changeDirection(Direction::Right);

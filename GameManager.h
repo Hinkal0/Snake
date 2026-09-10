@@ -11,6 +11,9 @@ class GameManager {
 
   static sf::Font arial;
 
+  Text title;
+  Text bestMenu;
+
   sf::Clock clock;
   Field field;
   Text score;
@@ -24,6 +27,8 @@ class GameManager {
   bool paused = false;
 
   Snake snake = Snake(field, curScore);
+
+  uint32_t scene = 0;
 
 public:
 

@@ -9,6 +9,8 @@ Text::Text(const sf::Font& font, sf::Vector2u winSize, sf::Vector2f pos, uint32_
 
 void Text::updateScales(uint32_t width, uint32_t height) {
   text.setCharacterSize(size*height/600.0f);
+  if (!origin) text.setOrigin({text.getLocalBounds().size.x/2, text.getLocalBounds().size.y/2});
+  if (origin == 2) text.setOrigin({text.getLocalBounds().size.x, 0});
   text.setPosition({pos.x*width/600.0f, pos.y*height/600.0f});
 }
 
