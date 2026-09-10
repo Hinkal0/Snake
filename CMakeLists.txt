@@ -34,6 +34,7 @@ add_executable(snake
   Field.cpp
   GameManager.cpp
   Snake.cpp
+  Text.cpp
 )
 
 set_target_properties(snake 
