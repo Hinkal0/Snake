@@ -16,15 +16,15 @@ class Field {
   bool hasApple = false;
   sf::Vector2i applePos = {0, 0};
   
-  void updateScales(uint32_t width, uint32_t height);
   
   friend class Snake;
-
-public:
-
+  
+  public:
   sf::Sprite field = sf::Sprite(fieldTex);
 
   Field(uint32_t width, uint32_t height);
+
+  void updateScales(uint32_t width, uint32_t height);
 
   void spawnRandomApple(const std::deque<sf::Vector2i>& pos);
   void removeApple();

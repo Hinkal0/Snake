@@ -9,4 +9,6 @@ int main() {
   while (gm.isOpen()) {
     gm.update();
   }
+
+  return 0;
 }

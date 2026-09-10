@@ -5,8 +5,9 @@ sf::Texture Snake::headTex("textures/head.png");
 sf::Texture Snake::bodyTex("textures/body.png");
 
 void Snake::updateScales(uint32_t width, uint32_t height) {
-  head.setScale({0.75f*width/600, 0.75f*height/600});
-  body.setScale({0.75f*width/600, 0.75f*height/600});
+  uint32_t size = std::min(width, height);
+  head.setScale({0.75f*size/600, 0.75f*size/600});
+  body.setScale({0.75f*size/600, 0.75f*size/600});
 }
 
 Snake::Snake(Field& field, uint32_t& score) : field(field), score(score) {

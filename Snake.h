@@ -19,16 +19,17 @@ class Snake {
   sf::Sprite head = sf::Sprite(headTex);
   sf::Sprite body = sf::Sprite(bodyTex);
 
-  void updateScales(uint32_t width, uint32_t height);
-
+  
   Field& field;
   uint32_t& score;
-
-public:
+  
+  public:
   bool collided = false;  
   Direction dir = Direction::Right;
 
   Snake(Field& field, uint32_t& score);
+
+  void updateScales(uint32_t width, uint32_t height);
 
   void changeDirection(Direction d);
   void restart();

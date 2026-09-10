@@ -1,21 +1,45 @@
 #include "GameManager.h"
 #include <iostream>
+#include <fstream>
+
+sf::Font GameManager::arial("fonts/ArialMT.ttf");
+
+static const wchar_t* helpStr = 
+L"←↑→↓ - повороты\nR - начать заново\nEsc - пауза";
 
 GameManager::GameManager()
-  : window (sf::VideoMode({600, 600}), "Snake", sf::Style::Titlebar | sf::Style::Close),
-    field (600, 600), arial("fonts/ArialMT.ttf"), scoreboard(arial, "0", 64) {
+  : window (sf::VideoMode({800, 600}), "Snake"),
+    field (800, 600), 
+    score(arial, {800, 600}, {300, 40}, 64, "0"),
+    best(arial, {800, 600}, {595, 5}, 32, "", 2),
+    help(arial, {800, 600}, {5, 5}, 24, helpStr, 1) {
   clock.start();
-  scoreboard.setOrigin({scoreboard.getLocalBounds().size.x/2, scoreboard.getLocalBounds().size.y/2});
-  scoreboard.setPosition({300, 40});
+  sf::Vector2u minSize(800, 600);
+  window.setMinimumSize(minSize);
+
+  std::ifstream save("save.dat", std::ios::binary);
+  if (save.is_open()) {
+    save.read((char*)&bestScore, sizeof(uint32_t));
+  }
+  best.update(std::wstring(L"Лучший счёт: ") + std::to_wstring(bestScore));
 }
 
 void GameManager::update() {
   pollEvents();
 
+  if (paused) return;
+
   if (clock.getElapsedTime().asMilliseconds() >= 500) {
     snake.update();
-    scoreboard.setString(std::to_string(score));
-    scoreboard.setOrigin({scoreboard.getLocalBounds().size.x/2, scoreboard.getLocalBounds().size.y/2});
+
+    if (oldScore != curScore) {
+      score.update(std::to_string(curScore));
+      oldScore = curScore;
+      if (curScore > bestScore) {
+        bestScore = curScore;
+        best.update(std::wstring(L"Лучший счёт: ") + std::to_wstring(bestScore));
+      }
+    }
     clock.restart();
   }
 
@@ -33,18 +57,27 @@ bool GameManager::isOpen() const {
 void GameManager::draw() {
   field.draw(window);
   snake.draw(window);
-  window.draw(scoreboard);
+  score.draw(window);
+  best.draw(window);
+  help.draw(window);
 }
 
 void GameManager::pollEvents() {
   while (const auto& event = window.pollEvent()) {
     if (event->is<sf::Event::Closed>()) {
+      std::ofstream save("save.dat", std::ios::binary);
+      save.write((char*)&bestScore, sizeof(uint32_t));
       window.close();
-      continue;
+      return;
     }
     if (const auto* resized = event->getIf<sf::Event::Resized>()) {
       sf::View view(sf::FloatRect({.0f, .0f}, {(float)resized->size.x, (float)resized->size.y}));
       window.setView(view);
+      field.updateScales(resized->size.x, resized->size.y);
+      snake.updateScales(resized->size.x, resized->size.y);
+      score.updateScales(resized->size.x, resized->size.y);
+      best.updateScales(resized->size.x, resized->size.y);
+      help.updateScales(resized->size.x, resized->size.y);
     }
     if (const auto* key = event->getIf<sf::Event::KeyPressed>()) {
       switch (key->code) {
@@ -61,8 +94,16 @@ void GameManager::pollEvents() {
         snake.changeDirection(Direction::Down);
         break;
       case sf::Keyboard::Key::R:
+        if (paused) {
+          paused = false;
+          clock.start();
+        }
         snake.restart();
         break;
+      case sf::Keyboard::Key::Escape:
+        paused ^= 1;
+        if (paused) clock.reset();
+        else clock.start();
       default:
         break;
       }
