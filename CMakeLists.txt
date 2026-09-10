@@ -43,7 +43,7 @@ set_target_properties(snake
 )
 
 if (WIN32)
-  target_link_options(snake PRIVATE -mwindows)
+  target_link_options(snake PRIVATE -mwindows -static)
 endif()
 
 target_link_libraries(snake
